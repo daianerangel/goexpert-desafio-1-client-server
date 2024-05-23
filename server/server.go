@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql" // MySQL driver
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type ExchangeRate struct {
@@ -58,7 +58,6 @@ func quotationHandler(db *sql.DB) http.HandlerFunc {
 
 		if err := saveQuotationToDB(dbCtx, db, quotation); err != nil {
 			log.Println("Error saving quotation to DB:", err)
-			// Not failing the request due to DB error
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -67,7 +66,6 @@ func quotationHandler(db *sql.DB) http.HandlerFunc {
 }
 
 func main() {
-	// Adjust the dataSourceName string as per your MySQL user, password, hostname and database name
 	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/currency_exchange")
 	if err != nil {
 		log.Fatal(err)
