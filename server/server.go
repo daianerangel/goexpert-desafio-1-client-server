@@ -43,7 +43,7 @@ func saveQuotationToDB(ctx context.Context, db *sql.DB, quotation string) error 
 
 func quotationHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), 5000*time.Millisecond)
+		ctx, cancel := context.WithTimeout(r.Context(), 200*time.Millisecond)
 		defer cancel()
 
 		quotation, err := fetchExchangeRate(ctx)
