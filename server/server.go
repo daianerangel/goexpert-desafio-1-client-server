@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type ExchangeRate struct {
@@ -66,11 +66,16 @@ func quotationHandler(db *sql.DB) http.HandlerFunc {
 }
 
 func main() {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/currency_exchange")
+	db, err := sql.Open("sqlite3", "./currency_exchange.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS quotations (id INTEGER PRIMARY KEY AUTOINCREMENT, quotation TEXT)")
+	if err != nil {
+		log.Fatal("Failed to ensure database table exists:", err)
+	}
 
 	http.HandleFunc("/cotacao", quotationHandler(db))
 	log.Println("Server started on port 8080")
